@@ -1,0 +1,48 @@
+.home-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 260px;
+    padding: 16px;
+}
+
+.hero-card {
+    width: 100%;
+    max-width: 560px;
+    padding: 28px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f8fbff 0%, #e2ecff 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    text-align: center;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.hero-card h1 {
+    color: #0f172a;
+    margin: 4px 0 8px;
+}
+
+.subtitle {
+    color: #475569;
+    margin-bottom: 16px;
+}
+
+.hero-card button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.hero-card button:hover {
+    background: #1d4ed8;
+}

@@ -1,0 +1,49 @@
+name: Deploy to Salesforce
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Salesforce CLI
+        run: npm install -g sfdx-cli
+
+      - name: Create JWT key file
+        env:
+          SFDX_JWT_KEY: ${{ secrets.SFDX_JWT_KEY }}
+        run: |
+          mkdir -p .jwt
+          printf '%s' "$SFDX_JWT_KEY" > .jwt/server.key
+          chmod 600 .jwt/server.key
+
+      - name: Authenticate to Salesforce
+        env:
+          SFDX_USERNAME: ${{ secrets.SFDX_USERNAME }}
+          SFDX_CONSUMER_KEY: ${{ secrets.SFDX_CONSUMER_KEY }}
+          SFDX_INSTANCE_URL: ${{ secrets.SFDX_INSTANCE_URL || 'https://login.salesforce.com' }}
+        run: |
+          sfdx force:auth:jwt:grant \
+            --clientid "$SFDX_CONSUMER_KEY" \
+            --jwtkeyfile .jwt/server.key \
+            --username "$SFDX_USERNAME" \
+            --instanceurl "$SFDX_INSTANCE_URL" \
+            --setdefaultusername
+
+      - name: Deploy source to Salesforce
+        run: |
+          sfdx force:source:deploy -p force-app -u ${{ secrets.SFDX_USERNAME }} --wait 10
